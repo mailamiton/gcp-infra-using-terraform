@@ -1,0 +1,21 @@
+
+version: "3"
+
+services:
+  atlantis:
+    image: runatlantis/atlantis
+    container_name: atlantis
+    ports:
+      - "4141:4141"
+    environment:
+      - ATLANTIS_GH_USER=<github-username>
+      - ATLANTIS_GH_TOKEN=<personal-access-token>
+      - ATLANTIS_GH_WEBHOOK_SECRET=<random-secret>
+      - ATLANTIS_REPO_ALLOWLIST=github.com/<your-org>/<repo>
+      - ATLANTIS_PORT=4141
+      - ATLANTIS_REPO_CONFIG=atlantis.yaml
+    volumes:
+      - ./repos:/home/atlantis/repos
+      - ./terraform-sa.json:/home/atlantis/terraform-sa.json
+      - ./atlantis.yaml:/atlantis/repos.yaml
+    restart: unless-stopped

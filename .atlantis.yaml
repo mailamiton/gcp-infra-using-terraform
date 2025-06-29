@@ -1,1 +1,9 @@
-atlantis.yaml
+version: 3
+projects:
+  - name: gcp-infra
+    dir: .
+    workflow: conftest
+    workspace: default
+    autoplan:
+      when_modified: ["*.tf", "*.tfvars"]
+      enabled: true

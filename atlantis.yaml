@@ -1,9 +1,78 @@
 version: 3
+
+# Workflows define a custom set of commands for 'plan' and 'apply'.
+# This allows for steps like policy checking with Conftest.
+workflows:
+  conftest:
+    plan:
+      steps:
+        - init
+        - plan
+        # The 'show' step is required to output the plan in a JSON format
+        # that policy-as-code tools like Conftest can parse.
+        - show
+        # This step runs Conftest against the plan.
+        # NOTE: It assumes you have policies in a 'policy/' directory at the repo root.
+        # The '-' tells conftest to read the JSON plan from stdin.
+        - run: conftest test --all-namespaces -p policy/ -
+    apply:
+      steps:
+        - apply
+
 projects:
-  - name: gcp-infra
-    dir: .
-    workflow: conftest
-    workspace: default
-    autoplan:
-      when_modified: ["*.tf", "*.tfvars"]
-      enabled: true
+# =========================================================================
+# Initial Bootstrap Setup
+# =========================================================================
+- name: initial-setup
+  dir: Initial-setup
+  workspace: default
+  workflow: conftest
+  autoplan:
+    when_modified: ["*.tf", "*.tfvars"]
+    enabled: true
+  apply_requirements: [approved]
+
+# =========================================================================
+# Team: team-ops
+# =========================================================================
+- name: team-ops-dev
+  dir: terraform/teams/team-ops/dev
+  workspace: default
+  workflow: conftest
+  autoplan:
+    when_modified: ["*.tf", "*.tfvars", "../../../modules/**/*.tf"]
+    enabled: true
+  apply_requirements: [approved]
+
+- name: team-ops-prod
+  dir: terraform/teams/team-ops/prod
+  workspace: default
+  workflow: conftest
+  autoplan:
+    when_modified: ["*.tf", "*.tfvars", "../../../modules/**/*.tf"]
+    enabled: true
+  apply_requirements: [approved]
+
+# =========================================================================
+# Team: team-data
+# =========================================================================
+- name: team-data-dev
+  dir: terraform/teams/team-data/dev
+  workspace: default
+  workflow: conftest
+  autoplan:
+    when_modified: ["*.tf", "*.tfvars", "../../../modules/**/*.tf"]
+    enabled: true
+  apply_requirements: [approved]
+
+# =========================================================================
+# Global Resources
+# =========================================================================
+- name: global-org-policies
+  dir: terraform/global/org-policies
+  workspace: default
+  workflow: conftest
+  autoplan:
+    when_modified: ["*.tf", "*.tfvars", "../../modules/**/*.tf"]
+    enabled: true
+  apply_requirements: [approved]

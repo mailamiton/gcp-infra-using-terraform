@@ -1,19 +1,34 @@
-variable "project_id" {}
-variable "credentials_file" {}
-variable "instance_type" {}
-variable "elastic_ip" {
-  type = string
-  default =""
+variable "project_id" {
+  type        = string
+  description = "The ID of the Google Cloud project"
 }
-variable "image_id" {
-  type = string
-  default = "ubuntu-2204-lts" # Ubuntu 22.04 LTS (HVM)
-}
+
 variable "region" {
-    type = string
-    default = "us-central1"
+  type        = string
+  description = "The region where the resources will be created"
 }
+
+variable "credentials_file" {
+  type        = string
+  description = "The path to the credentials file"
+}
+
+variable "image_id" {
+  type        = string
+  description = "The ID of the image to use"
+}
+
+variable "elastic_ip" {
+  type        = string
+  description = "The public IP address to assign to the instance"
+}
+
+variable "instance_type" {
+  type        = string
+  description = "The type of instance to create"
+}
+
 variable "availability_zone_names" {
-  type    = list(string)
-  default = ["us-central1-a"]
+  type        = list(string)
+  description = "The list of availability zones"
 }

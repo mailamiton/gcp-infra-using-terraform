@@ -1,5 +1,12 @@
 version: 3
 
+repos:
+  - id: github.com/mailamiton/gcp-infra-using-terraform
+    # Allow per‑repo configs to set the 'workflow' key
+    allowed_overrides: ["workflow"]
+    # You can still set a default here or omit it entirely
+    workflow: conftest
+
 # Workflows define a custom set of commands for 'plan' and 'apply'.
 # This allows for steps like policy checking with Conftest.
 workflows:

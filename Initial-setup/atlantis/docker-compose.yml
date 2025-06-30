@@ -11,6 +11,7 @@ services:
       - ATLANTIS_GH_TOKEN=<token>
       - ATLANTIS_GH_WEBHOOK_SECRET=<randm secret>
       - ATLANTIS_REPO_ALLOWLIST=github.com/<userid git>/<repo name>
+      - 'ATLANTIS_REPO_CONFIG_JSON={"repos": [{"id": "/.*/", "allowed_overrides": ["workflow"], "allow_custom_workflows": true}]}'
       - ATLANTIS_PORT=4141
     volumes:
       - ./repos:/home/atlantis/repos

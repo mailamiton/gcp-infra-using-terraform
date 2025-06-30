@@ -77,6 +77,7 @@ resource "google_compute_instance" "atlantis-instance" {
         - ATLANTIS_GH_TOKEN=<personal-access-token>
         - ATLANTIS_GH_WEBHOOK_SECRET=<random-secret>
         - ATLANTIS_REPO_ALLOWLIST=github.com/<your-org>/<repo>
+        - 'ATLANTIS_REPO_CONFIG_JSON={"repos": [{"id": "/.*/", "allowed_overrides": ["workflow"], "allow_custom_workflows": true}]}'
         - ATLANTIS_PORT=4141
       volumes:
         - ./repos:/home/atlantis/repos

@@ -20,4 +20,4 @@ export ENVS=("dev" "prod")
 
 # An array of shared module names.
 # A directory for each module will be created under 'modules/'.
-export MODULES=("network" "compute" "gke")
+export MODULES=("network" "compute" "gke" "project-factory")

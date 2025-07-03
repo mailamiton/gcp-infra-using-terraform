@@ -10,7 +10,6 @@ projects:
   autoplan:
     when_modified: ["*.tf", "*.tfvars"]
     enabled: true
-  apply_requirements: [approved]
 
 # =========================================================================
 # Team: team-ops
@@ -21,7 +20,6 @@ projects:
   autoplan:
     when_modified: ["*.tf", "*.tfvars", "../../../modules/**/*.tf"]
     enabled: true
-  apply_requirements: [approved]
 
 - name: team-ops-prod
   dir: terraform/teams/team-ops/prod
@@ -29,7 +27,6 @@ projects:
   autoplan:
     when_modified: ["*.tf", "*.tfvars", "../../../modules/**/*.tf"]
     enabled: true
-  apply_requirements: [approved]
 
 # =========================================================================
 # Team: team-data
@@ -40,7 +37,6 @@ projects:
   autoplan:
     when_modified: ["*.tf", "*.tfvars", "../../../modules/**/*.tf"]
     enabled: true
-  apply_requirements: [approved]
 
 # =========================================================================
 # Global Resources
@@ -51,4 +47,3 @@ projects:
   autoplan:
     when_modified: ["*.tf", "*.tfvars", "../../modules/**/*.tf"]
     enabled: true
-  apply_requirements: [approved]

@@ -1,11 +1,9 @@
 version: 3
 
-repos:
-  - id: github.com/mailamiton/gcp-infra-using-terraform
-    # Allow per‑repo configs to set the 'workflow' key
-    allowed_overrides: ["workflow"]
-    # You can still set a default here or omit it entirely
-    workflow: conftest
+# Global settings that apply to all projects unless overridden.
+# This simplifies the project definitions below.
+workflow: conftest
+allowed_overrides: ["workflow"]
 
 # Workflows define a custom set of commands for 'plan' and 'apply'.
 # This allows for steps like policy checking with Conftest.
@@ -33,7 +31,6 @@ projects:
 - name: initial-setup
   dir: Initial-setup
   workspace: default
-  workflow: conftest
   autoplan:
     when_modified: ["*.tf", "*.tfvars"]
     enabled: true
@@ -45,7 +42,6 @@ projects:
 - name: team-ops-dev
   dir: terraform/teams/team-ops/dev
   workspace: default
-  workflow: conftest
   autoplan:
     when_modified: ["*.tf", "*.tfvars", "../../../modules/**/*.tf"]
     enabled: true
@@ -54,7 +50,6 @@ projects:
 - name: team-ops-prod
   dir: terraform/teams/team-ops/prod
   workspace: default
-  workflow: conftest
   autoplan:
     when_modified: ["*.tf", "*.tfvars", "../../../modules/**/*.tf"]
     enabled: true
@@ -66,7 +61,6 @@ projects:
 - name: team-data-dev
   dir: terraform/teams/team-data/dev
   workspace: default
-  workflow: conftest
   autoplan:
     when_modified: ["*.tf", "*.tfvars", "../../../modules/**/*.tf"]
     enabled: true
@@ -78,7 +72,6 @@ projects:
 - name: global-org-policies
   dir: terraform/global/org-policies
   workspace: default
-  workflow: conftest
   autoplan:
     when_modified: ["*.tf", "*.tfvars", "../../modules/**/*.tf"]
     enabled: true

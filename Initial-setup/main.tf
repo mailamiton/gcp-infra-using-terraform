@@ -26,7 +26,10 @@ resource "google_compute_instance" "atlantis-instance" {
       image = var.image_id
     }
   }
-
+  service_account {
+    email  = "atlantis-sa@your-project.iam.gserviceaccount.com"
+    scopes = ["cloud-platform"]  # ⚠️ must include storage access
+  }
   network_interface {
     network = data.google_compute_network.default.self_link
     access_config {

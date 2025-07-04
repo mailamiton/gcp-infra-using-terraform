@@ -2,14 +2,14 @@ version: 3
 
 projects:
 # =========================================================================
-# Initial Bootstrap Setup
+# Initial Bootstrap Setup - Need to run from local as atlansis is not setup
 # =========================================================================
-- name: initial-setup
-  dir: Initial-setup
-  workspace: default
-  autoplan:
-    when_modified: ["*.tf", "*.tfvars"]
-    enabled: true
+# - name: initial-setup
+#   dir: Initial-setup
+#   workspace: default
+#   autoplan:
+#     when_modified: ["*.tf", "*.tfvars"]
+#     enabled: true
 
 # =========================================================================
 # Team: team-ops

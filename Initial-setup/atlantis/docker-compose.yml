@@ -16,7 +16,7 @@ services:
       # Use a named volume for persistent Atlantis data (plan files, etc.)
       - atlantis-data:/home/atlantis
       # Mount the server-side repo config to a dedicated, read-only config path
-      - ../atlantis.yaml:/etc/atlantis/atlantis.yaml:ro
+      - ./atlantis.yaml:/etc/atlantis/atlantis.yaml:ro
     command: server --repo-config=/etc/atlantis/atlantis.yaml --port=4141
     restart: unless-stopped
 

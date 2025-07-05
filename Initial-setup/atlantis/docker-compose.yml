@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   atlantis:
-    image: runatlantis/atlantis:v0.27.2 # Pinning version for stability
+    image: runatlantis/atlantis:v0.28.1 # Pinning version for stability
     container_name: atlantis
     # This directive explicitly tells Docker Compose to load variables
     # from the .env file in this directory. This is default behavior,

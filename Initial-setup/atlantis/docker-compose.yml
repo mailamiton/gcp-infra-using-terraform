@@ -1,16 +1,20 @@
+version: "3.8"
+
 services:
-    atlantis:
-      image: runatlantis/atlantis:latest
-      container_name: atlantis
-      network_mode: "host"
-      environment:
-        - ATLANTIS_GH_USER=<github-username>
-        - ATLANTIS_GH_TOKEN=<personal-access-token>
-        - ATLANTIS_GH_WEBHOOK_SECRET=<random-secret>
-        - ATLANTIS_REPO_ALLOWLIST=github.com/<your-org>/<repo>
-      volumes:
-        - ./repos:/home/atlantis/repos
-        - ./atlantis.yaml:/atlantis/repos.yaml
-        - ./config.yaml:/etc/atlantis/config.yaml:ro
-      command: ["server", "--config", "/etc/atlantis/config.yaml"]
-      restart: unless-stopped
+  atlantis:
+    image: ghcr.io/runatlantis/atlantis:v0.34.0 # Stable pinned version
+    container_name: atlantis
+    # Load environment variables from .env file
+    env_file:
+      - .env
+    ports:
+      - "4141:4141"  # Expose Atlantis UI/webhook port
+    volumes:
+      - atlantis-data:/home/atlantis/repos              # Use named volume
+      - ./config.yaml:/etc/atlantis/config.yaml:ro      # Atlantis server-side config
+    command: server --repo-config=/etc/atlantis/config.yaml --port=4141
+    restart: unless-stopped
+
+volumes:
+  atlantis-data:
+    name: atlantis-data 

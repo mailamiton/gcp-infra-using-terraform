@@ -1,16 +1,18 @@
+# Server-side Atlantis configuration
 repos:
-  - id: /.*/
-    workflow: conftest
-    allowed_overrides: [workflow, apply_requirements]
+  - id: github.com/mailamiton/gcp-infra-using-terraform  # Your repo ID
+    workflow: conftest                                   # Default workflow to use
+    allowed_overrides: [workflow, apply_requirements]    # Allow override in atlantis.yaml
 
-  workflows:
-    conftest:
-      plan:
-        steps:
-          - init
-          - plan
-          - show
-          - run: conftest test --all-namespaces -p policy/ -
-      apply:
-        steps:
-          - apply
+# Define workflows available for use
+workflows:
+  conftest:
+    plan:
+      steps:
+        - init
+        - plan
+        - show
+        - run: conftest test --all-namespaces -p policy/ -
+    apply:
+      steps:
+        - apply

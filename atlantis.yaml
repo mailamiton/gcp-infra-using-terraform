@@ -1,3 +1,8 @@
+repos:
+  - id: github.com/mailamiton/gcp-infra-using-terraform
+    workflow: conftest
+    allowed_overrides: [workflow, apply_requirements]
+
 workflows:
   conftest:
     plan:
@@ -5,52 +10,33 @@ workflows:
         - init
         - plan
         - show
-        # This command is from your original config.yaml
         - run: conftest test --all-namespaces -p policy/ -
-    apply:
-      steps: [apply]
 
-repos:
-  - id: github.com/mailamiton/gcp-infra-using-terraform
-    # Define defaults for all projects in this repo to keep it DRY (Don't Repeat Yourself)
-    workflow: conftest
-    allowed_overrides: [workflow, apply_requirements]
+projects:
+  - name: team-ops-dev
+    dir: terraform/teams/team-ops/dev
+    workspace: default
+    autoplan:
+      when_modified: ["*.tf", "*.tfvars", "**/modules/**/*.tf"]
+      enabled: true
 
+  - name: team-ops-prod
+    dir: terraform/teams/team-ops/prod
+    workspace: default
+    autoplan:
+      when_modified: ["*.tf", "*.tfvars", "**/modules/**/*.tf"]
+      enabled: true
 
-    projects:
-      # =========================================================================
-      # Team: team-ops
-      # =========================================================================
-      - name: team-ops-dev
-        dir: terraform/teams/team-ops/dev
-        workspace: default
-        autoplan:
-          when_modified: ["*.tf", "*.tfvars", "**/modules/**/*.tf", "../../modules/**/*.tf", "../../../modules/**/*.tf"]
-          enabled: true
+  - name: team-data-dev
+    dir: terraform/teams/team-data/dev
+    workspace: default
+    autoplan:
+      when_modified: ["*.tf", "*.tfvars", "**/modules/**/*.tf"]
+      enabled: true
 
-      - name: team-ops-prod
-        dir: terraform/teams/team-ops/prod
-        workspace: default
-        autoplan:
-          when_modified: ["*.tf", "*.tfvars", "**/modules/**/*.tf", "../../modules/**/*.tf", "../../../modules/**/*.tf"]
-          enabled: true
-
-      # =========================================================================
-      # Team: team-data
-      # =========================================================================
-      - name: team-data-dev
-        dir: terraform/teams/team-data/dev
-        workspace: default
-        autoplan:
-          when_modified: ["*.tf", "*.tfvars", "**/modules/**/*.tf", "../../modules/**/*.tf", "../../../modules/**/*.tf"]
-          enabled: true
-
-      # =========================================================================
-      # Global Resources
-      # =========================================================================
-      - name: global-org-policies
-        dir: terraform/global/org-policies
-        workspace: default
-        autoplan:
-          when_modified: ["*.tf", "*.tfvars", "**/modules/**/*.tf", "../../modules/**/*.tf", "../../../modules/**/*.tf"]
-          enabled: true
+  - name: global-org-policies
+    dir: terraform/global/org-policies
+    workspace: default
+    autoplan:
+      when_modified: ["*.tf", "*.tfvars", "**/modules/**/*.tf"]
+      enabled: true

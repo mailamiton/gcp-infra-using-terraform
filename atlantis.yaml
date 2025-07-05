@@ -14,10 +14,11 @@ repos:
 - id: github.com/mailamiton/gcp-infra-using-terraform
   # Define defaults for all projects in this repo to keep it DRY (Don't Repeat Yourself)
   workflow: conftest
-  apply_requirements: [approved]
+  allowed_overrides: [workflow, apply_requirements]
+
 
   projects:
-    # All projects below are now correctly indented and will inherit the settings from above.
+
     # =========================================================================
     # Team: team-ops
     # =========================================================================

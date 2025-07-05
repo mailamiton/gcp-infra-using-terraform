@@ -1,5 +1,25 @@
 version: 3
 
+# Define a YAML anchor for common project settings to avoid repetition.
+x-project-defaults: &project_defaults
+  workflow: conftest
+  apply_requirements: [approved]
+  autoplan:
+    when_modified: ["*.tf", "*.tfvars", "**/modules/**/*.tf", "../../modules/**/*.tf", "../../../modules/**/*.tf"]
+    enabled: true
+
+workflows:
+  conftest:
+    plan:
+      steps:
+        - init
+        - plan
+        - show
+        # This command is from your original config.yaml
+        - run: conftest test --all-namespaces -p policy/ -
+    apply:
+      steps: [apply]
+
 projects:
 # =========================================================================
 # Initial Bootstrap Setup - Need to run from local as atlansis is not setup
@@ -17,16 +37,12 @@ projects:
 - name: team-ops-dev
   dir: terraform/teams/team-ops/dev
   workspace: default
-  autoplan:
-    when_modified: ["*.tf", "*.tfvars", "../../../modules/**/*.tf"]
-    enabled: true
+  <<: *project_defaults
 
 - name: team-ops-prod
   dir: terraform/teams/team-ops/prod
   workspace: default
-  autoplan:
-    when_modified: ["*.tf", "*.tfvars", "../../../modules/**/*.tf"]
-    enabled: true
+  <<: *project_defaults
 
 # =========================================================================
 # Team: team-data
@@ -34,9 +50,7 @@ projects:
 - name: team-data-dev
   dir: terraform/teams/team-data/dev
   workspace: default
-  autoplan:
-    when_modified: ["*.tf", "*.tfvars", "../../../modules/**/*.tf"]
-    enabled: true
+  <<: *project_defaults
 
 # =========================================================================
 # Global Resources
@@ -44,6 +58,4 @@ projects:
 - name: global-org-policies
   dir: terraform/global/org-policies
   workspace: default
-  autoplan:
-    when_modified: ["*.tf", "*.tfvars", "../../modules/**/*.tf"]
-    enabled: true
+  <<: *project_defaults

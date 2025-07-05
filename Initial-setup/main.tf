@@ -1,7 +1,6 @@
 provider "google" {
   project = var.project_id
   region  = var.region
-  credentials = file(var.credentials_file)
 }
 
 terraform {
@@ -26,7 +25,10 @@ resource "google_compute_instance" "atlantis-instance" {
       image = var.image_id
     }
   }
-
+  service_account {
+    email  = var.terraform_service_account
+    scopes = ["cloud-platform"]
+  }
   network_interface {
     network = data.google_compute_network.default.self_link
     access_config {
@@ -60,33 +62,45 @@ resource "google_compute_instance" "atlantis-instance" {
   mkdir -p /opt/atlantis/repos
   cd /opt/atlantis
 
-  # Inject GCP SA key via metadata (example) OR manually preload the key into the VM
-  # echo "$GCP_SA_JSON" > terraform-sa.json (example if passed as startup variable)
-
   # Create Docker Compose file
   cat << 'DOCKER' > docker-compose.yml
-  version: "3"
   services:
     atlantis:
-      image: runatlantis/atlantis
+      image: runatlantis/atlantis:latest
       container_name: atlantis
-      ports:
-        - "4141:4141"
+      network_mode: "host"
       environment:
         - ATLANTIS_GH_USER=<github-username>
         - ATLANTIS_GH_TOKEN=<personal-access-token>
         - ATLANTIS_GH_WEBHOOK_SECRET=<random-secret>
         - ATLANTIS_REPO_ALLOWLIST=github.com/<your-org>/<repo>
-        - ATLANTIS_PORT=4141
       volumes:
         - ./repos:/home/atlantis/repos
-        - ./terraform-sa.json:/home/atlantis/terraform-sa.json
+        - ./atlantis.yaml:/atlantis/repos.yaml
+        - ./config.yaml:/etc/atlantis/config.yaml:ro
+      command: ["server", "--config", "/etc/atlantis/config.yaml"]
       restart: unless-stopped
   DOCKER
 
-  # Place your GCP SA file in the same dir if you use prebuilt image or metadata/scripts
-  # For test, write fake one to avoid docker crash (remove in prod)
-  echo '{}' > terraform-sa.json
+  #  Atlantis server-side config used to define workflow
+  cat << 'CONFIG_FILE_WEBHOOK' > config.yaml
+  repos:
+  - id: /.*/
+    workflow: conftest
+    allowed_overrides: [workflow, apply_requirements]
+
+  workflows:
+    conftest:
+      plan:
+        steps:
+          - init
+          - plan
+          - show
+          - run: conftest test --all-namespaces -p policy/ -
+      apply:
+        steps:
+          - apply
+  CONFIG_FILE_WEBHOOK
 
   # Start Atlantis
   docker-compose up -d

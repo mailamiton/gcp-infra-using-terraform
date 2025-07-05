@@ -8,11 +8,6 @@ variable "region" {
   description = "The region where the resources will be created"
 }
 
-variable "credentials_file" {
-  type        = string
-  description = "The path to the credentials file"
-}
-
 variable "image_id" {
   type        = string
   description = "The ID of the image to use"
@@ -31,4 +26,9 @@ variable "instance_type" {
 variable "availability_zone_names" {
   type        = list(string)
   description = "The list of availability zones"
+}
+
+variable "terraform_service_account" {
+  type        = string
+  description = "The name of the Terraform service account"
 }

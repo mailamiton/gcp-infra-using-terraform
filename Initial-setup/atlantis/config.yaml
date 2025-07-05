@@ -1,0 +1,16 @@
+repos:
+  - id: /.*/
+    workflow: conftest
+    allowed_overrides: [workflow, apply_requirements]
+
+  workflows:
+    conftest:
+      plan:
+        steps:
+          - init
+          - plan
+          - show
+          - run: conftest test --all-namespaces -p policy/ -
+      apply:
+        steps:
+          - apply

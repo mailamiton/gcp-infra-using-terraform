@@ -15,9 +15,9 @@ module "external-data-landing-zone" {
     "container.googleapis.com"
   ]
 
-  labels = {
-    environment = "dev"
-    team        = "ops"
-    application = "analytics"
-  }
+  # labels = {
+  #   environment = "dev"
+  #   team        = "ops"
+  #   application = "analytics"
+  # }
 }

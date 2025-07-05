@@ -13,7 +13,7 @@ You will need a GitHub account to manage the repository and create the necessary
 1.  **Create a GCP Project:** If you don't have one, create a new project in the Google Cloud Console.
 2.  **Create a Service Account:**
     *   Navigate to **IAM & Admin** -> **Service Accounts**.
-    *   Click **Create Service Account**. Name it something descriptive, like `atlantis-bootstrap-sa`.
+    *   Click **Create Service Account**. Name it something descriptive, like `terraform-deployer`.
     *   Grant it the following roles, which are necessary for creating the VM and its related resources:
         *   `Compute Admin`
         *   `Service Account User`
@@ -66,8 +66,13 @@ Now, you will connect to the newly created server to configure and start the Atl
     gcloud compute ssh atlantis-instance --zone <YOUR_VM_ZONE>
     ```
 2.  **Clone the Repository:**
+     create and upload ssh key into githib and Add SSH Key to the Agent on local machine
+     ```bash
+     eval "$(ssh-agent -s)"
+     ssh-add ~/.ssh/id_ed25519
+     ```
     ```bash
-    git clone https://github.com/<your-org>/<repo-name>.git
+    git clone git@github.com:mailamiton/gcp-infra-using-terraform.git
     cd <repo-name>/Initial-setup/
     ```
 3.  **Create the `.env` file:** This file securely provides secrets to the Atlantis container. Create a new file named `.env` in the `Initial-setup` directory.

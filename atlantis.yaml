@@ -1,79 +1,67 @@
-# Define workflows used in this repo
-workflows:
-  conftest:
-    plan:
-      steps:
-        - init
-        - plan
-        - show
-        # This command runs Conftest to check policies
-        - run: conftest test --all-namespaces -p policy/ -
-    apply:
-      steps:
-        - apply
+version: 3
 
-# Repository configuration
-repos:
-  - id: github.com/mailamiton/gcp-infra-using-terraform
-    # Default workflow and allowed overrides for this repo
+projects:
+  # Initial bootstrap is commented out, to be run manually
+  # - name: initial-setup
+  #   dir: Initial-setup
+  #   workspace: default
+  #   autoplan:
+  #     when_modified: ["*.tf", "*.tfvars"]
+  #     enabled: true
+
+  # -----------------------------
+  # Team: team-ops
+  # -----------------------------
+  - name: team-ops-dev
+    dir: terraform/teams/team-ops/dev
+    workspace: default
     workflow: conftest
-    allowed_overrides: [workflow, apply_requirements]
+    apply_requirements: [approved]
+    autoplan:
+      when_modified:
+        - "*.tf"
+        - "*.tfvars"
+        - "../../../modules/**/*.tf"
+      enabled: true
 
-    # Projects define different Terraform root modules and their configurations
-    projects:
-      # =========================================================================
-      # Team: team-ops
-      # =========================================================================
-      - name: team-ops-dev
-        dir: terraform/teams/team-ops/dev
-        workspace: default
-        autoplan:
-          when_modified:
-            - "*.tf"
-            - "*.tfvars"
-            - "**/modules/**/*.tf"
-            - "../../modules/**/*.tf"
-            - "../../../modules/**/*.tf"
-          enabled: true
+  - name: team-ops-prod
+    dir: terraform/teams/team-ops/prod
+    workspace: default
+    workflow: conftest
+    apply_requirements: [approved]
+    autoplan:
+      when_modified:
+        - "*.tf"
+        - "*.tfvars"
+        - "../../../modules/**/*.tf"
+      enabled: true
 
-      - name: team-ops-prod
-        dir: terraform/teams/team-ops/prod
-        workspace: default
-        autoplan:
-          when_modified:
-            - "*.tf"
-            - "*.tfvars"
-            - "**/modules/**/*.tf"
-            - "../../modules/**/*.tf"
-            - "../../../modules/**/*.tf"
-          enabled: true
+  # -----------------------------
+  # Team: team-data
+  # -----------------------------
+  - name: team-data-dev
+    dir: terraform/teams/team-data/dev
+    workspace: default
+    workflow: conftest
+    apply_requirements: [approved]
+    autoplan:
+      when_modified:
+        - "*.tf"
+        - "*.tfvars"
+        - "../../../modules/**/*.tf"
+      enabled: true
 
-      # =========================================================================
-      # Team: team-data
-      # =========================================================================
-      - name: team-data-dev
-        dir: terraform/teams/team-data/dev
-        workspace: default
-        autoplan:
-          when_modified:
-            - "*.tf"
-            - "*.tfvars"
-            - "**/modules/**/*.tf"
-            - "../../modules/**/*.tf"
-            - "../../../modules/**/*.tf"
-          enabled: true
-
-      # =========================================================================
-      # Global Resources
-      # =========================================================================
-      - name: global-org-policies
-        dir: terraform/global/org-policies
-        workspace: default
-        autoplan:
-          when_modified:
-            - "*.tf"
-            - "*.tfvars"
-            - "**/modules/**/*.tf"
-            - "../../modules/**/*.tf"
-            - "../../../modules/**/*.tf"
-          enabled: true
+  # -----------------------------
+  # Global Org Policies
+  # -----------------------------
+  - name: global-org-policies
+    dir: terraform/global/org-policies
+    workspace: default
+    workflow: conftest
+    apply_requirements: [approved]
+    autoplan:
+      when_modified:
+        - "*.tf"
+        - "*.tfvars"
+        - "../../modules/**/*.tf"
+      enabled: true

@@ -12,7 +12,7 @@ workflows:
         - init
         - plan
         - show
-        - run: conftest test --all-namespaces -p policy/ -  # Run conftest against the plan
+        - run: conftest test --all-namespaces -p policy/ -
     apply:
       steps:
         - apply

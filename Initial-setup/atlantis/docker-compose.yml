@@ -1,19 +1,16 @@
-version: "3"
-
 services:
-  atlantis:
-    image: runatlantis/atlantis
-    container_name: atlantis
-    ports:
-      - "4141:4141"
-    environment:
-      - ATLANTIS_GH_USER=<userid git>
-      - ATLANTIS_GH_TOKEN=<token>
-      - ATLANTIS_GH_WEBHOOK_SECRET=<randm secret>
-      - ATLANTIS_REPO_ALLOWLIST=github.com/<userid git>/<repo name>
-      - 'ATLANTIS_REPO_CONFIG_JSON={"repos": [{"id": "/.*/", "allowed_overrides": ["workflow"], "allow_custom_workflows": true}]}'
-      - ATLANTIS_PORT=4141
-    volumes:
-      - ./repos:/home/atlantis/repos
-      - ./terraform-sa.json:/home/atlantis/terraform-sa.json
-    restart: unless-stopped
+    atlantis:
+      image: runatlantis/atlantis:latest
+      container_name: atlantis
+      network_mode: "host"
+      environment:
+        - ATLANTIS_GH_USER=<github-username>
+        - ATLANTIS_GH_TOKEN=<personal-access-token>
+        - ATLANTIS_GH_WEBHOOK_SECRET=<random-secret>
+        - ATLANTIS_REPO_ALLOWLIST=github.com/<your-org>/<repo>
+      volumes:
+        - ./repos:/home/atlantis/repos
+        - ./atlantis.yaml:/atlantis/repos.yaml
+        - ./config.yaml:/etc/atlantis/config.yaml:ro
+      command: ["server", "--config", "/etc/atlantis/config.yaml"]
+      restart: unless-stopped

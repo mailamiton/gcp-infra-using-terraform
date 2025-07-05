@@ -1,16 +1,25 @@
+version: "3.8"
+
 services:
-    atlantis:
-      image: runatlantis/atlantis:latest
-      container_name: atlantis
-      network_mode: "host"
-      environment:
-        - ATLANTIS_GH_USER=<github-username>
-        - ATLANTIS_GH_TOKEN=<personal-access-token>
-        - ATLANTIS_GH_WEBHOOK_SECRET=<random-secret>
-        - ATLANTIS_REPO_ALLOWLIST=github.com/<your-org>/<repo>
-      volumes:
-        - ./repos:/home/atlantis/repos
-        - ./atlantis.yaml:/atlantis/repos.yaml
-        - ./config.yaml:/etc/atlantis/config.yaml:ro
-      command: ["server", "--config", "/etc/atlantis/config.yaml"]
-      restart: unless-stopped
+  atlantis:
+    image: runatlantis/atlantis:v0.27.2 # Pinning version for stability
+    container_name: atlantis
+    # This directive explicitly tells Docker Compose to load variables
+    # from the .env file in this directory. This is default behavior,
+    # but being explicit improves clarity.
+    env_file:
+      - .env
+    ports:
+      # Map port 4141 on the host to port 4141 in the container
+      - "4141:4141"
+    volumes:
+      # Use a named volume for persistent Atlantis data (plan files, etc.)
+      - atlantis-data:/home/atlantis
+      # Mount the server-side repo config from the repo root as read-only
+      - ../atlantis.yaml:/home/atlantis/atlantis.yaml:ro
+    command: server --repo-config=/home/atlantis/atlantis.yaml --port=4141
+    restart: unless-stopped
+
+volumes:
+  atlantis-data:
+    name: atlantis-data

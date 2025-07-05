@@ -16,4 +16,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  atlantis-data: {}
+  atlantis-data:
+    name: atlantis-data 

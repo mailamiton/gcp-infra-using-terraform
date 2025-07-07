@@ -38,22 +38,54 @@ resource "google_compute_instance" "atlantis-instance" {
   tags = ["atlantis-machine"]
 
   metadata_startup_script = <<-EOF
-  #! /bin/bash
-  # Exit on any error
-  set -e
+  #!/bin/bash
+  set -euo pipefail
 
-  # --- Install Dependencies ---
-  apt update
-  # Install Git, Docker, and Curl
-  apt install -y git docker.io curl
+  # Avoid interactive prompts
+  export DEBIAN_FRONTEND=noninteractive
+
+  # --- Update & install core packages ---
+  apt-get update -y
+  apt-get install -y \
+    curl \
+    unzip \
+    git \
+    ca-certificates \
+    gnupg \
+    lsb-release \
+    software-properties-common
+
+  # --- Install Docker from official repo ---
+  install -m 0755 -d /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+    gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  chmod a+r /etc/apt/keyrings/docker.gpg
+
+  echo \
+    "deb [arch=$(dpkg --print-architecture) \
+    signed-by=/etc/apt/keyrings/docker.gpg] \
+    https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+  apt-get update -y
+  apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
   systemctl enable docker
   systemctl start docker
 
-  # Install Docker Compose v1 (as per original script)
-  curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
-    -o /usr/local/bin/docker-compose
-  chmod +x /usr/local/bin/docker-compose
+ # --- Install Terraform v${var.atlantis_terraform_version} ---
+  curl -sSLo terraform.zip "https://releases.hashicorp.com/terraform/${var.atlantis_terraform_version}/terraform_${var.atlantis_terraform_version}_linux_amd64.zip"
+  unzip terraform.zip -d /usr/local/bin
+  chmod +x /usr/local/bin/terraform
+  rm terraform.zip
+
+  # Print versions to verify
+  terraform version
+  docker --version
+  docker compose version
 EOF
+
 
 }
 

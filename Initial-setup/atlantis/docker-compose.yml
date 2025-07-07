@@ -2,8 +2,13 @@ version: "3.8"
 
 services:
   atlantis:
-    image: ghcr.io/runatlantis/atlantis:v0.34.0 # Stable pinned version
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: atlantis-v0.34.0-terraform-v1.12.2
     container_name: atlantis
+    environment:
+      - ATLANTIS_DEFAULT_TERRAFORM_VERSION=1.12.2
     # Load environment variables from .env file
     env_file:
       - .env
@@ -17,4 +22,4 @@ services:
 
 volumes:
   atlantis-data:
-    name: atlantis-data 
+    name: atlantis-data

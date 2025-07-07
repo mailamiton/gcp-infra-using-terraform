@@ -32,3 +32,9 @@ variable "terraform_service_account" {
   type        = string
   description = "The name of the Terraform service account"
 }
+
+variable "atlantis_terraform_version" {
+  description = "The version of Terraform to install on the Atlantis server."
+  type        = string
+  default     = "1.8.4"
+}

@@ -1,5 +1,5 @@
 terraform {
-  required_version = "= 1.8.4"  # use an exact version if you're enforcing consistency
+  required_version = "= 1.8.4" # use an exact version if you're enforcing consistency
 
   required_providers {
     google = {

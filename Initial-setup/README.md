@@ -134,6 +134,15 @@ Now, you will connect to the newly created server to configure and start the Atl
 
     # Check that the Atlantis UI is responding locally on the server
     curl http://localhost:4141
+
+    # To check logs
+    docker-compose logs -f
+
+    #If you just want to rebuild fresh and remove all volumes, you can run:
+
+    docker-compose down --volumes --rmi all
+    docker compose up --build
+
     ```
 
 ## Phase 4: Finalize GitHub Webhook

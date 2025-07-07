@@ -1,14 +1,15 @@
-# Base image: Atlantis v0.34.0
 FROM ghcr.io/runatlantis/atlantis:v0.34.0
 
-# Set Terraform version
 ENV TERRAFORM_VERSION=1.12.2
 
-# Download and install Terraform
-RUN curl -sSLo /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
-    unzip /tmp/terraform.zip -d /usr/local/bin && \
-    chmod +x /usr/local/bin/terraform && \
-    rm /tmp/terraform.zip
+# Install Terraform to Atlantis-compatible path
+RUN mkdir -p /home/atlantis/.atlantis/bin && \
+    cd /tmp && \
+    curl -fsSLO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    mv terraform /home/atlantis/.atlantis/bin/terraform${TERRAFORM_VERSION} && \
+    chmod +x /home/atlantis/.atlantis/bin/terraform${TERRAFORM_VERSION} && \
+    rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
-# Verify installation
-RUN terraform version
+# Verify
+RUN /home/atlantis/.atlantis/bin/terraform${TERRAFORM_VERSION} version

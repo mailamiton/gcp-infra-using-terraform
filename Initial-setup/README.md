@@ -125,7 +125,7 @@ Now, you will connect to the newly created server to configure and start the Atl
 5.  **Start Atlantis:** Use Docker Compose to start the container in the background. It will automatically use the `docker-compose.yml` and the `.env` file from the current directory.
     ```bash
     # If you skipped step 4, you must use sudo
-    docker-compose up -d
+    docker compose up -d
     ```
 6.  **Verify Atlantis is Running:**
     ```bash
@@ -136,11 +136,11 @@ Now, you will connect to the newly created server to configure and start the Atl
     curl http://localhost:4141
 
     # To check logs
-    docker-compose logs -f
+    docker compose logs -f
 
     #If you just want to rebuild fresh and remove all volumes, you can run:
 
-    docker-compose down --volumes --rmi all
+    docker compose down --volumes --rmi all
     docker compose up --build
 
     ```

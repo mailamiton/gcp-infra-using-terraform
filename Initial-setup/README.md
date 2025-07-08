@@ -103,9 +103,11 @@ Now, you will connect to the newly created server to configure and start the Atl
     ```bash
     git clone git@github.com:mailamiton/gcp-infra-using-terraform.git
     mkdir atlantis
+    mkdir atlantis/policy
     cd atlantis
     cp ../gcp-infra-using-terraform/Initial-setup/atlantis/* .
-
+    mkdir atlantis/policy
+    cp ../gcp-infra-using-terraform/policy/* policy/
     ```
 3.  **Create the `.env` file:** This file securely provides secrets to the Atlantis container. Create a new file named `.env` in the `Initial-setup` directory.
     ```bash

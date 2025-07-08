@@ -147,7 +147,7 @@ Now, you will connect to the newly created server to configure and start the Atl
     docker compose up --build
 
     # To get inside the container and check 
-
+    docker exec -it atlantis bash
     ```
 
 ## Phase 4: Finalize GitHub Webhook

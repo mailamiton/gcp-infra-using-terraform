@@ -10,7 +10,7 @@ workflows:
         - init
         - plan:
             extra_args: ["-out=plan.tfplan"]
-        - run: terraform show -json plan.tfplan | conftest test --all-namespaces -p ../../../policy/ -
+        - run: /home/atlantis/.atlantis/bin/terraform1.12.2 show -json plan.tfplan | conftest test --all-namespaces -p /home/atlantis/policy -
     apply:
       steps:
         - apply

@@ -17,6 +17,7 @@ services:
     volumes:
       - atlantis-data:/home/atlantis/repos              # Use named volume
       - ./config.yaml:/etc/atlantis/config.yaml:ro      # Atlantis server-side config
+      - ./policy:/home/atlantis/policy:ro               # Atlantis policy files
     command: server --repo-config=/etc/atlantis/config.yaml --port=4141
     restart: unless-stopped
 

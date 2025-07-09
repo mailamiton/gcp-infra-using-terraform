@@ -16,8 +16,8 @@ module "external-data-landing-zone" {
   ]
 
   labels = {
-    # environment = "dev"
-    # team        = "ops"
-    # application = "analytics"
+    environment = "dev"
+    team        = "ops"
+    application = "analytics"
   }
 }

@@ -146,7 +146,7 @@ Now, you will connect to the newly created server to configure and start the Atl
     #If you just want to rebuild fresh and remove all volumes, you can run:
 
     docker compose down --volumes --rmi all
-    docker compose up --build
+    docker compose up --build -d
 
     # To get inside the container and check 
     docker exec -it atlantis bash

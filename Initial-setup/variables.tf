@@ -38,3 +38,8 @@ variable "atlantis_terraform_version" {
   type        = string
   default     = "1.8.4"
 }
+
+variable "state_bucket_name" {
+  type        = string
+  description = "The name of the state bucket"
+}

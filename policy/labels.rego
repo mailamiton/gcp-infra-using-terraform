@@ -1,6 +1,6 @@
 package main
 
-required_labels = {"env", "team"}
+required_labels = {"application", "team", "environment"}
 
 deny[msg] {
   resource := input.resource_changes[_].change.after

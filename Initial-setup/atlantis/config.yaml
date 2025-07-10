@@ -11,11 +11,13 @@ workflows:
         - plan:
             extra_args: ["-out=plan.tfplan"]
         - run: |
-            /home/atlantis/.atlantis/bin/terraform1.12.2 show -json plan.tfplan \
-              | conftest test --all-namespaces \
-                  -p /home/atlantis/policy/gcp \
-                  -p /home/atlantis/policy/terraform \
-                  -
+            set -e
+            /home/atlantis/.atlantis/bin/terraform1.12.2 show -json plan.tfplan > plan.json
+            echo "Running Conftest GCP policies:"
+            conftest test --all-namespaces --output=tap -p /home/atlantis/policy/gcp plan.json
+            echo "Running Conftest Terraform policies:"
+            conftest test --all-namespaces --output=tap -p /home/atlantis/policy/terraform plan.json
+
     apply:
       steps:
         - apply

@@ -36,3 +36,4 @@ override.tf.json
 # Remove Temp Files 
 Initial-setup/tmp
 Initial-setup/tmp/*
+*.zip

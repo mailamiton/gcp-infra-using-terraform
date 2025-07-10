@@ -16,34 +16,8 @@ module "external-data-landing-zone" {
   ]
 
   labels = {
-    #environment = "dev"
+    environment = "dev"
     team        = "ops"
     application = "analytics"
   }
-}
-
-
-
-# Define multiple folders to archive and upload
-locals {
-  atlantis_archives = {
-    policy   = "${path.module}/"
-  }
-}
-
-# Dynamically create archive files
-data "archive_file" "zips" {
-  for_each    = local.atlantis_archives
-  type        = "zip"
-  source_dir  = each.value
-  output_path = "${path.module}/tmp/${each.key}.zip"
-}
-
-# Upload each archive to GCS
-resource "google_storage_bucket_object" "archives" {
-  for_each = data.archive_file.zips
-
-  name   = "atlantis_metadata/${each.key}.zip"
-  bucket = "test"
-  source = each.value.output_path
 }

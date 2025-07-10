@@ -94,7 +94,7 @@ Now, you will connect to the newly created server to configure and start the Atl
     ```bash
     gcloud compute ssh atlantis-instance --zone <YOUR_VM_ZONE>
     ```
-2.  **Clone the Repository: (Optional)** 
+2.  **Clone the Repository: (Optional) if /usr/local/atlantis/ is not present** 
      create and upload ssh key into githib and Add SSH Key to the Agent on local machine
      ```bash
      eval "$(ssh-agent -s)"
@@ -111,6 +111,7 @@ Now, you will connect to the newly created server to configure and start the Atl
     ```
 3.  **Create the `.env` file:** This file securely provides secrets to the Atlantis container. Create a new file named `.env` in the `Initial-setup` directory.
     ```bash
+    cd cd /usr/local/atlantis/
     nano .env
     ```
     Add the following content, replacing the placeholder values with your actual credentials.

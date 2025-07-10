@@ -14,6 +14,36 @@ data "google_compute_network" "default" {
   name = "default"
 }
 
+# Define multiple folders to archive and upload
+locals {
+  atlantis_archives = {
+    atlantis       = "${path.module}/atlantis"
+    policy   = "${path.module}/../policy"
+  }
+}
+
+# Dynamically create archive files
+data "archive_file" "zips" {
+  for_each    = local.atlantis_archives
+  type        = "zip"
+  source_dir  = each.value
+  output_path = "${path.module}/tmp/${each.key}.zip"
+}
+
+# Upload each archive to GCS
+resource "google_storage_bucket_object" "archives" {
+  for_each = data.archive_file.zips
+
+  name   = "atlantis_metadata/${each.key}.zip"
+  bucket = var.state_bucket_name
+  source = each.value.output_path
+}
+
+# resource "null_resource" "download-atlantis-folder" {
+#   provisioner "local-exec" {
+#     command = "gsutil cp -r gs://${var.state_bucket_name}/atlantis /initial-setup/atlantis"
+#   }
+# }
 
 resource "google_compute_instance" "atlantis-instance" {
   name         = "atlantis-instance"
@@ -84,6 +114,13 @@ resource "google_compute_instance" "atlantis-instance" {
   terraform version
   docker --version
   docker compose version
+
+ # --- Atlantis Setup v${var.atlantis_terraform_version} ---
+ mkdir /usr/local/atlantis
+ gsutil cp -r gs://${var.state_bucket_name}/atlantis_metadata/*  /usr/local/atlantis
+ unzip /usr/local/atlantis/atlantis.zip -d /usr/local/atlantis/
+ unzip /usr/local/atlantis/policy.zip  -d /usr/local/atlantis/policy/
+
 EOF
 
 

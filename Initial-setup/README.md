@@ -94,7 +94,7 @@ Now, you will connect to the newly created server to configure and start the Atl
     ```bash
     gcloud compute ssh atlantis-instance --zone <YOUR_VM_ZONE>
     ```
-2.  **Clone the Repository:**
+2.  **Clone the Repository: (Optional) if /usr/local/atlantis/ is not present** 
      create and upload ssh key into githib and Add SSH Key to the Agent on local machine
      ```bash
      eval "$(ssh-agent -s)"
@@ -103,12 +103,15 @@ Now, you will connect to the newly created server to configure and start the Atl
     ```bash
     git clone git@github.com:mailamiton/gcp-infra-using-terraform.git
     mkdir atlantis
+    mkdir atlantis/policy
     cd atlantis
     cp ../gcp-infra-using-terraform/Initial-setup/atlantis/* .
-
+    mkdir atlantis/policy
+    cp ../gcp-infra-using-terraform/policy/* policy/
     ```
 3.  **Create the `.env` file:** This file securely provides secrets to the Atlantis container. Create a new file named `.env` in the `Initial-setup` directory.
     ```bash
+    cd cd /usr/local/atlantis/
     nano .env
     ```
     Add the following content, replacing the placeholder values with your actual credentials.
@@ -128,7 +131,17 @@ Now, you will connect to the newly created server to configure and start the Atl
 5.  **Start Atlantis:** Use Docker Compose to start the container in the background. It will automatically use the `docker-compose.yml` and the `.env` file from the current directory.
     ```bash
     # If you skipped step 4, you must use sudo
-    docker compose up -d
+    docker compose up --build -d
+    # To check logs
+    docker compose logs -f
+
+    #If you just want to rebuild fresh and remove all volumes, you can run:
+
+    docker compose down --volumes --rmi all
+    docker compose up --build -d
+
+    # To get inside the container and check 
+    docker exec -it atlantis bash
     ```
 6.  **Verify Atlantis is Running:**
     ```bash
@@ -138,16 +151,6 @@ Now, you will connect to the newly created server to configure and start the Atl
     # Check that the Atlantis UI is responding locally on the server
     curl http://localhost:4141
 
-    # To check logs
-    docker compose logs -f
-
-    #If you just want to rebuild fresh and remove all volumes, you can run:
-
-    docker compose down --volumes --rmi all
-    docker compose up --build
-
-    # To get inside the container and check 
-    docker exec -it atlantis bash
     ```
 
 ## Phase 4: Finalize GitHub Webhook

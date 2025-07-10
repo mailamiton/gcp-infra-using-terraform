@@ -33,3 +33,7 @@ override.tf.json
 # Mac-specific files
 .DS_Store
 
+# Remove Temp Files 
+Initial-setup/tmp
+Initial-setup/tmp/*
+*.zip
